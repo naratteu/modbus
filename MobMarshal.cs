@@ -30,7 +30,7 @@ namespace Naratteu.Modbus
             set => prop(set, swap, value);
         }
     }
-
+    
     public unsafe static class Endian<T> where T : unmanaged
     {
         readonly static int size = sizeof(T);
@@ -79,22 +79,22 @@ namespace Naratteu.Modbus
     public interface IDATA { }
     public interface IREQ : IDATA { }
     public interface IRES : IDATA { }
-    public interface IDATA<T> : IDATA where T : IBins { T bins(); }
+    public interface IDATA<T> : IDATA { T data(); }
     public struct READ : IREQ
     {
         public Reg addr, cnt;
     }
     [StructLayout(LayoutKind.Sequential, Pack = 1)] //type:일케하면 모든 struct에 적용되는게 맞는지?
-    public struct READ<T> : IRES, IDATA<T> where T : struct, IBins
+    public struct READ<T> : IRES, IDATA<T> where T : struct
     {
         public byte len; public T read;
-        public T bins() => read;
+        public T data() => read;
     }
     [StructLayout(LayoutKind.Sequential, Pack = 1)] //type:일케하면 모든 struct에 적용되는게 맞는지?
-    public struct WRITE<T> : IREQ, IDATA<T> where T : struct, IBins
+    public struct WRITE<T> : IREQ, IDATA<T> where T : struct
     {
         public Reg addr, cnt; public byte len; public T write;
-        public T bins() => write;
+        public T data() => write;
     }
     public struct WRITE : IRES
     {
