@@ -16,12 +16,8 @@ namespace Naratteu.Modbus
         public abstract (UInt16 cnt, byte len) Info<T>() where T : struct;
 
         public static MobAttribute Get<T>() where T : struct => (MobAttribute)typeof(T).GetCustomAttributes(typeof(MobAttribute), true).Single();
-        public READ ToReqRead<T>() where T : struct => new() { addr = addr, cnt = Info<T>().cnt };
-        public WRITE<T> ToReqWrite<T>(in T t) where T : struct
-        {
-            (UInt16 cnt, byte len) = Info<T>();
-            return new() { addr = addr, cnt = cnt, len = len, write = t };
-        }
+        public READ ToReqRead<T>() where T : struct => new() { addr = addr, cnt = IAttrRR<T>.cnt };
+        public WRITE<T> ToReqWrite<T>(in T t) where T : struct => new() { addr = addr, cnt = IAttrRR<T>.cnt, len = IAttrRR<T>.len, write = t };
     }
 
     public class MobRegAttribute : MobAttribute
